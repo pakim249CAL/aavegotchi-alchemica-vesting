@@ -27,16 +27,16 @@ export async function deployVestingContract(
 }
 
 export async function increaseTime(time: number): Promise<void> {
-  await hre.network.provider.send("evm_increaseTime", [time]);
+  await hre.network.provider.send("evm_setNextBlockTimestamp", [time + await currentTimestamp()]);
 }
 
-export async function mine(times: number): Promise<void> {
+export async function mine(times: number = 1): Promise<void> {
   for (let i = 0; i < times; i++) {
     await hre.network.provider.send("evm_mine", []);
   }
 }
 
-export async function currentTimestamp(): Promise<BigNumber> {
+export async function currentTimestamp(): Promise<number> {
   let block = await hre.ethers.provider.getBlock("latest");
-  return BigNumber.from(block.timestamp);
+  return block.timestamp;
 }
